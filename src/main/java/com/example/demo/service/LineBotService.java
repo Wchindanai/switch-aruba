@@ -8,6 +8,7 @@ import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,7 +26,7 @@ public class LineBotService {
 
     public Message handleMessage(
             MessageEvent<TextMessageContent> e) throws JsonProcessingException {
-        var message = e.getMessage().getText();
+        String message = e.getMessage().getText();
         if (message.equalsIgnoreCase("interface status") || message.equalsIgnoreCase("interface")) {
             return handleGetInterface();
         }
@@ -33,11 +34,11 @@ public class LineBotService {
     }
 
     public Message handleGetInterface() throws JsonProcessingException {
-        var response = restTemplate.getForEntity(
+        ResponseEntity<String> response = restTemplate.getForEntity(
                 "http://100.98.63.125/html/json.html?method:getIntList=&start=0&limit=24",
                 String.class);
-        var interfaceResponse = mapper.readValue(response.getBody(), InterfaceResponse.class);
-        var textResponse = "";
+        InterfaceResponse interfaceResponse = mapper.readValue(response.getBody(), InterfaceResponse.class);
+        String textResponse = "";
         interfaceResponse.getResults().forEach(interfaceDetail -> textResponse.concat("port: ")
                 .concat(interfaceDetail.getPort().concat(" status: ")
                         .concat(interfaceDetail.getStatus().concat(" mode: ")
