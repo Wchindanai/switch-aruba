@@ -1,11 +1,10 @@
 package com.example.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.List;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -15,13 +14,21 @@ public class InterfaceResponse {
     private List<InterfaceDetail> results;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @Getter
-    @Setter
     @Data
     public static class InterfaceDetail {
 
         private String port;
         private String status;
         private String mode;
+
+        @JsonInclude(Include.NON_NULL)
+        private Neighbor neighbor;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @Data
+    public static class Neighbor {
+
+        private String name;
     }
 }
