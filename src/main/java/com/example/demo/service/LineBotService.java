@@ -37,10 +37,13 @@ public class LineBotService {
     }
 
     public Message handleGetInterface() throws JsonProcessingException {
+        log.info("Call API");
         ResponseEntity<String> response = restTemplate.getForEntity(
                 "http://100.98.63.125/html/json.html?method:getIntList=&start=0&limit=24",
                 String.class);
-        InterfaceResponse interfaceResponse = mapper.readValue(response.getBody(), InterfaceResponse.class);
+        log.info("API response:{}", response.getBody());
+        InterfaceResponse interfaceResponse = mapper
+                .readValue(response.getBody(), InterfaceResponse.class);
         String textResponse = "";
         interfaceResponse.getResults().forEach(interfaceDetail -> textResponse.concat("port: ")
                 .concat(interfaceDetail.getPort().concat(" status: ")
