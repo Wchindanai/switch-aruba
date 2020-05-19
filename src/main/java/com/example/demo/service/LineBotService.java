@@ -8,11 +8,13 @@ import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class LineBotService {
 
     private RestTemplate restTemplate;
@@ -27,6 +29,7 @@ public class LineBotService {
     public Message handleMessage(
             MessageEvent<TextMessageContent> e) throws JsonProcessingException {
         String message = e.getMessage().getText();
+        log.info("message: {}", message);
         if (message.equalsIgnoreCase("interface status") || message.equalsIgnoreCase("interface")) {
             return handleGetInterface();
         }
@@ -43,6 +46,7 @@ public class LineBotService {
                 .concat(interfaceDetail.getPort().concat(" status: ")
                         .concat(interfaceDetail.getStatus().concat(" mode: ")
                                 .concat(interfaceDetail.getMode()))));
+        log.info("response :{}", textResponse);
         return new TextMessage(textResponse);
     }
 
